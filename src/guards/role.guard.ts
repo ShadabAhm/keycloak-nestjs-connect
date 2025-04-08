@@ -7,7 +7,6 @@ export class RoleGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const rolesMetadata = this.reflector.get<{ roles: string[] }>('roles', context.getHandler());
-    
     const requiredRoles = rolesMetadata?.roles || [];
 
     if (!requiredRoles.length) {
@@ -16,15 +15,11 @@ export class RoleGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-
     if (!user) {
       throw new ForbiddenException('User not authenticated');
     }
 
     const userRoles = user.resource_access?.['nestjs-app']?.roles || [];
-
-    console.log('Required roles:', requiredRoles);
-    console.log('User roles:', userRoles);
 
     const hasRole = requiredRoles.some((role) => userRoles.includes(role));
     if (!hasRole) {

@@ -1,23 +1,25 @@
+import { KeycloakAdminModule } from './keycloak-admin/keycloak-admin.module';
 import { Module } from '@nestjs/common';
-import { AuthGuard, KeycloakConnectModule, ResourceGuard } from 'nest-keycloak-connect';
+import { AuthGuard, KeycloakConnectModule, ResourceGuard, RoleGuard } from 'nest-keycloak-connect';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config'; 
 import { KeycloakConfigService } from './config/keycloak-config.service'; 
 import { APP_GUARD } from '@nestjs/core';
-import { UsersService } from './users/users.service';
-import { UsersController } from './users/users.controller';
-import { RoleGuard } from './guards/role.guard';
+import { UsersController } from './employees/users.controller';
+import { UsersModule } from './employees/users.module';
+import { UsersService } from './employees/users.service';
+import { KeycloakAdminController } from './keycloak-admin/keycloak-admin.controller';
+// import { RoleGuard } from './guards/role.guard';
 @Module({
   imports: [
     KeycloakConnectModule.registerAsync({
       useClass: KeycloakConfigService,
       imports:[ConfigModule]
     }),
-    UsersModule,
+    UsersModule, KeycloakAdminModule
   ],
-  controllers: [AppController, UsersController],
+  controllers: [AppController, UsersController, KeycloakAdminController],
   providers: [
     AppService, UsersService,
     {

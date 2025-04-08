@@ -7,7 +7,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
+@Get()
 @Roles({ roles: ['user', 'admin'] })
 async findAll() {
   return await this.usersService.findAll();
@@ -22,6 +22,7 @@ async create(@Body() createUserDto: CreateUserDto) {
 @Delete(':id')
 @Roles({ roles: ['admin'] })
 async delete(@Param('id') id: string) {
-  return await `User with id ${id} deleted`;
+  const deletedUser = await this.usersService.delete(Number(id));
+  return deletedUser;
 }
 }
